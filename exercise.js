@@ -4,7 +4,8 @@ function convert(amount) {
 		return validWithMessage[1];
 	}
 	
-	var digits = getDigits(Math.floor(amount));
+	var wholeAmount = Math.floor(amount);
+	var digits = getDigits(wholeAmount);
 	var decimal = getDecimal(amount);
 	var ones = '',
 		tens = '',
@@ -15,8 +16,8 @@ function convert(amount) {
 	// because digits[] grows from the left.
 	
 	if (digits.length >= 1) {
-		if (amount === 0) {
-			return format('zero');
+		if (wholeAmount === 0) {
+			ones = 'zero';
 		}
 		
 		if (digits[digits.length - 1] !== 0) {
@@ -26,9 +27,8 @@ function convert(amount) {
 	
 	if (digits.length >= 2) {
 		if (digits[digits.length - 2] === 1) { // Last two digits < 20
-			// Calculate temporary amount for last two digits
-			amountOfLastTwoDigits = (digits[digits.length - 2] * 10) + digits[digits.length - 1];
 			ones = '';
+			amountOfLastTwoDigits = (digits[digits.length - 2] * 10) + digits[digits.length - 1];
 			tens = getTeens(amountOfLastTwoDigits);
 		} else {
 			tens = getTens(digits[digits.length - 2]);
