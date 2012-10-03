@@ -61,6 +61,7 @@ test('error-inducing tests', function () {
 	strictEqual(convert('hey'), 'Amount not a number');
 	strictEqual(convert(1.234), 'Amount has too many decimal places');
 	strictEqual(convert(0.101), 'Amount has too many decimal places');
+	strictEqual(convert(525600), 'Amount too large (valid range: 0.01-9999.99 and 0)');
 });
 
 test('digits tests', function () {
