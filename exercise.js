@@ -15,7 +15,11 @@ function convert(amount) {
 	tens = getTens(digits[digits.length - 2]);
 	
 	if (digits[digits.length - 1] !== 0) {
-		tens += '-';
+		if (digits[digits.length - 2] !== 0) {
+			tens += '-';
+		} else {
+			tens += ' ';
+		}
 		ones = getOnes(digits[digits.length - 1]);
 	}
 	
