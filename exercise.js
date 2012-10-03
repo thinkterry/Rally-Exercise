@@ -11,6 +11,11 @@ function convert(amount) {
 		tens = '',
 		hundreds = '',
 		thousands = '';
+		dollars = ' dollars'
+	
+	if (amount === 1) {
+		dollars = ' dollar'
+	}
 	
 	// When referencing digits[], count from the right, not the left,
 	// because digits[] grows from the left.
@@ -66,7 +71,7 @@ function convert(amount) {
 		}
 	}
 	
-	return format(thousands + hundreds + tens + ones + decimal);
+	return format(thousands + hundreds + tens + ones + decimal + dollars);
 }
 
 function getDigits(integer) {
