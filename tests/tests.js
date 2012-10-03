@@ -20,6 +20,10 @@ test('simple tests', function () {
 	strictEqual(convert(22), 'Twenty-two');
 	strictEqual(convert(30), 'Thirty');
 	strictEqual(convert(31), 'Thirty-one');
+	strictEqual(convert(50), 'Fifty');
+	strictEqual(convert(55), 'Fifty-five');
+	strictEqual(convert(86), 'Eighty-six');
+	strictEqual(convert(99), 'Ninety-nine');
 });
 
 test('getDigits tests', function () {
