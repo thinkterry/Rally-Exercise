@@ -1,39 +1,66 @@
 function convert(amount) {
 	var ones = '',
 		tens = '',
-		hundreds = '';
+		hundreds = '',
+		thousands = '';
 	var digits = getDigits(Math.floor(amount))
-	
-	if (amount < 20) {
-		ones = getSimpleCase(amount);
-		return format(ones);
-	}
 	
 	// When referencing digits[], count from the right, not the left,
 	// because digits[] grows from the left.
 	
-	tens = getTens(digits[digits.length - 2]);
-	
-	if (digits[digits.length - 1] !== 0) {
-		if (digits[digits.length - 2] !== 0) {
-			tens += '-';
-		} else {
-			tens += ' ';
+	if (digits.length >= 1) {
+		if (amount === 0) {
+			return format('zero');
 		}
-		ones = getOnes(digits[digits.length - 1]);
-	}
-	
-	if (digits.length === 3) {
-		hundreds += getOnes(digits[digits.length - 3]);
-		hundreds += ' ';
-		hundreds += "hundred";
 		
-		if (digits[digits.length - 2] !== 0) {
-			hundreds += ' ';
+		if (digits[digits.length - 1] !== 0) {
+			ones = getOnes(digits[digits.length - 1]);
 		}
 	}
 	
-	return format(hundreds + tens + ones);
+	if (digits.length >= 2) {
+		if (digits[digits.length - 2] === 1) { // Last two digits < 20
+			// Calculate temporary amount for last two digits
+			amountOfLastTwoDigits = (digits[digits.length - 2] * 10) + digits[digits.length - 1];
+			ones = '';
+			tens = getTeens(amountOfLastTwoDigits);
+		} else {
+			tens = getTens(digits[digits.length - 2]);
+		
+			if (digits[digits.length - 1] !== 0) { // Not 20, 30, 40...
+				if (digits[digits.length - 2] !== 0) {
+					tens += '-';
+				} else {
+					tens += ' ';
+				}
+				ones = getOnes(digits[digits.length - 1]);
+			}
+		}
+	}
+	
+	if (digits.length >= 3) {
+		if (digits[digits.length - 3] !== 0) {
+			hundreds += getOnes(digits[digits.length - 3]);
+			hundreds += ' ';
+			hundreds += "hundred";
+			
+			if (digits[digits.length - 2] !== 0) {
+				hundreds += ' ';
+			}
+		}
+	}
+	
+	if (digits.length >= 4) {
+		thousands += getOnes(digits[digits.length - 4]);
+		thousands += ' ';
+		thousands += "thousand";
+		
+		if (digits[digits.length - 3] !== 0 || digits[digits.length - 2] !== 0) {
+			thousands += ' ';
+		}
+	}
+	
+	return format(thousands + hundreds + tens + ones);
 }
 
 function getDigits(integer) {
@@ -54,19 +81,10 @@ function format(string) {
 	return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
-// Only call with numbers 1-19
-function getSimpleCase(amount) {
-	if (amount === 0) {
-		return 'zero';
-	} else if (amount < 10) {
-		return getOnes(amount);
-	} else if (amount < 20) {
-		return getTeens(amount);
-	}
-}
-
 function getOnes(ones) {
 	switch (ones) {
+		case 0:
+			return '';
 		case 1:
 			return 'one';
 		case 2:

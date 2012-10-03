@@ -33,6 +33,15 @@ test('simple tests', function () {
 	strictEqual(convert(830), 'Eight hundred thirty');
 	strictEqual(convert(839), 'Eight hundred thirty-nine');
 	strictEqual(convert(999), 'Nine hundred ninety-nine');
+	strictEqual(convert(1000), 'One thousand');
+	strictEqual(convert(1001), 'One thousand one');
+	strictEqual(convert(1010), 'One thousand ten');
+	strictEqual(convert(1100), 'One thousand one hundred');
+	strictEqual(convert(1101), 'One thousand one hundred one');
+	strictEqual(convert(2000), 'Two thousand');
+	strictEqual(convert(2438), 'Two thousand four hundred thirty-eight');
+	strictEqual(convert(2413), 'Two thousand four hundred thirteen');
+	strictEqual(convert(9999), 'Nine thousand nine hundred ninety-nine');
 });
 
 test('getDigits tests', function () {
