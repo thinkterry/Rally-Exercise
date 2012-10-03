@@ -6,18 +6,24 @@ function convert(amount) {
 		tens = 'Twenty';
 	}
 	
-	if (amount < 20) {
+	if (amount < 10) {
 		ones = getOnes(amount);
+	} else if (amount < 20) {
+		ones = getTeens(amount);
 		
-		// Capitalize first letter
-		// Modified from: http://stackoverflow.com/a/4878800
-		ones = ones.charAt(0).toUpperCase() + ones.substr(1);
+		
 	} else if (amount > 20) {
 		tens += '-';
 		ones = getOnes(amount - 20);
 	}
 	
-	return tens + ones;
+	var retval = tens + ones;
+	
+	// Capitalize first letter
+	// Modified from: http://stackoverflow.com/a/4878800
+	retval = retval.charAt(0).toUpperCase() + retval.substr(1);
+	
+	return retval;
 }
 
 function getOnes(ones) {
@@ -40,6 +46,13 @@ function getOnes(ones) {
 			return 'eight';
 		case 9:
 			return 'nine';
+		default:
+			break;
+	}
+}
+
+function getTeens(teens) {
+	switch (teens) {
 		case 10:
 			return 'ten';
 		case 11:
