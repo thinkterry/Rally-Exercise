@@ -2,17 +2,14 @@ function convert(amount) {
 	var ones = '',
 		tens = '';
 	
-	if (amount > 19) {
-		tens = 'Twenty';
-	}
-	
 	if (amount < 10) {
 		ones = getOnes(amount);
 	} else if (amount < 20) {
 		ones = getTeens(amount);
-		
-		
-	} else if (amount > 20) {
+	} else if (amount === 20) {
+		tens = 'Twenty';
+	} else if (amount >= 20) {
+		tens = 'Twenty';
 		tens += '-';
 		ones = getOnes(amount - 20);
 	}
