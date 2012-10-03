@@ -8,16 +8,11 @@ function convert(amount) {
 		return format(ones);
 	}
 	
-	if (digits[1] === 0) { // 20, 30, 40...
-		tens = getTens(amount);
-	} else if (amount < 30) {
-		tens = 'twenty';
+	tens = getTens(digits[0]);
+	
+	if (digits[1] !== 0) {
 		tens += '-';
-		ones = getOnes(amount - 20);
-	} else if (amount > 30) {
-		tens = 'thirty'
-		tens += '-';
-		ones = getOnes(amount - 30);
+		ones = getOnes(digits[1]);
 	}
 	
 	return format(tens + ones);
@@ -102,23 +97,23 @@ function getTeens(teens) {
 	}
 }
 
-function getTens(amount) {
-	switch (amount) {
-		case 20:
+function getTens(tens) {
+	switch (tens) {
+		case 2:
 			return 'twenty';
-		case 30:
+		case 3:
 			return 'thirty';
-		case 40:
+		case 4:
 			return 'forty';
-		case 50:
+		case 5:
 			return 'fifty';
-		case 60:
+		case 6:
 			return 'sixty';
-		case 70:
+		case 7:
 			return 'seventy';
-		case 80:
+		case 8:
 			return 'eighty';
-		case 90:
+		case 9:
 			return 'ninety';
 		default:
 			break;
