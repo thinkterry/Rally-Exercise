@@ -18,4 +18,6 @@ test('simple tests', function () {
 	strictEqual(convert(20), 'Twenty');
 	strictEqual(convert(21), 'Twenty-one');
 	strictEqual(convert(22), 'Twenty-two');
+	strictEqual(convert(30), 'Thirty');
+	strictEqual(convert(31), 'Thirty-one');
 });

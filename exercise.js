@@ -7,11 +7,17 @@ function convert(amount) {
 	} else if (amount < 20) {
 		ones = getTeens(amount);
 	} else if (amount === 20) {
-		tens = 'Twenty';
-	} else if (amount >= 20) {
-		tens = 'Twenty';
+		tens = 'twenty';
+	} else if (amount < 30) {
+		tens = 'twenty';
 		tens += '-';
 		ones = getOnes(amount - 20);
+	} else if (amount === 30) {
+		tens = 'thirty';
+	} else if (amount > 30) {
+		tens = 'thirty'
+		tens += '-';
+		ones = getOnes(amount - 30);
 	}
 	
 	var retval = tens + ones;
