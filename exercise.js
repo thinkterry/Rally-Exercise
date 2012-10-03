@@ -3,14 +3,11 @@ function convert(amount) {
 		tens = '',
 		hundreds = '',
 		thousands = '';
-	var digits = getDigits(Math.floor(amount))
+	var digits = getDigits(Math.floor(amount));
 	
-	// Error bound checks
-	if (amount > 9999.99) {
-		return 'Amount too large (valid range: 0-9999.99)';
-	}
-	if (amount < 0) {
-		return 'Amount too small (valid range: 0-9999.99)';
+	var validWithMessage = isValid(amount);
+	if (!validWithMessage[0]) {
+		return validWithMessage[1];
 	}
 	
 	// When referencing digits[], count from the right, not the left,
@@ -168,4 +165,16 @@ function getTens(tens) {
 		default:
 			break;
 	}
+}
+
+function isValid(amount) {
+	// Error bound checks
+	if (amount > 9999.99) {
+		return [false, 'Amount too large (valid range: 0-9999.99)'];
+	}
+	if (amount < 0) {
+		return [false, 'Amount too small (valid range: 0-9999.99)'];
+	}
+	
+	return [true, 'valid'];
 }
