@@ -23,7 +23,11 @@ test('simple tests', function () {
 });
 
 test('digits tests', function () {
+	deepEqual(digits(0), [0]);
 	deepEqual(digits(1), [1]);
 	deepEqual(digits(10), [1, 0]);
 	deepEqual(digits(100), [1, 0, 0]);
+	deepEqual(digits(111), [1, 1, 1]);
+	deepEqual(digits(1000), [1, 0, 0, 0]);
+	//deepEqual(digits(1.50), [1, '.', 5, 0]); // Illegal
 });

@@ -27,8 +27,8 @@ function convert(amount) {
 	return retval;
 }
 
-function digits(amount) {
-	var amountAsString = amount.toString();
+function digits(integer) {
+	var amountAsString = integer.toString();
 	var amountAsStringArray = amountAsString.split('');
 	
 	var amountAsIntArray = [];
