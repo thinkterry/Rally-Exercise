@@ -26,6 +26,12 @@ test('simple tests', function () {
 	strictEqual(convert(99), 'Ninety-nine');
 	strictEqual(convert(100), 'One hundred');
 	strictEqual(convert(101), 'One hundred one');
+	strictEqual(convert(102), 'One hundred two');
+	strictEqual(convert(200), 'Two hundred');
+	strictEqual(convert(201), 'Two hundred one');
+	strictEqual(convert(830), 'Eight hundred thirty');
+	strictEqual(convert(839), 'Eight hundred thirty-nine');
+	strictEqual(convert(999), 'Nine hundred ninety-nine');
 });
 
 test('getDigits tests', function () {

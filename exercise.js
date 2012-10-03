@@ -24,7 +24,13 @@ function convert(amount) {
 	}
 	
 	if (digits.length === 3) {
-		hundreds = "One hundred";
+		hundreds += getOnes(digits[digits.length - 3]);
+		hundreds += ' ';
+		hundreds += "hundred";
+		
+		if (digits[digits.length - 2] !== 0) {
+			hundreds += ' ';
+		}
 	}
 	
 	return format(hundreds + tens + ones);
