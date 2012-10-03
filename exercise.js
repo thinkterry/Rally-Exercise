@@ -2,10 +2,8 @@ function convert(amount) {
 	var ones = '',
 		tens = '';
 	
-	if (amount < 10) {
-		ones = getOnes(amount);
-	} else if (amount < 20) {
-		ones = getTeens(amount);
+	if (amount < 20) {
+		ones = getSimpleCase(amount);
 	} else if (amount === 20) {
 		tens = 'twenty';
 	} else if (amount < 30) {
@@ -27,6 +25,15 @@ function convert(amount) {
 	retval = retval.charAt(0).toUpperCase() + retval.substr(1);
 	
 	return retval;
+}
+
+// Only call with numbers 0-19
+function getSimpleCase(amount) {
+	if (amount < 10) {
+		return getOnes(amount);
+	} else if (amount < 20) {
+		return getTeens(amount);
+	}
 }
 
 function getOnes(ones) {
