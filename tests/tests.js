@@ -34,7 +34,7 @@ test('integer tests', function () {
 	strictEqual(convert(2000), 'Two thousand dollars');
 	strictEqual(convert(2438), 'Two thousand four hundred thirty-eight dollars');
 	strictEqual(convert(2413), 'Two thousand four hundred thirteen dollars');
-	strictEqual(convert(9999), 'Nine thousand nine hundred ninety-nine dollars');
+	strictEqual(convert(9999), 'Nine thousand nine hundred ninety-nine dollars');	
 });
 
 test('decimal tests', function () {
@@ -47,6 +47,7 @@ test('decimal tests', function () {
 	strictEqual(convert(1.00), 'One dollar');
 	strictEqual(convert(1.0), 'One dollar');
 	strictEqual(convert(1.), 'One dollar');
+	strictEqual(convert(2523.04), 'Two thousand five hundred twenty-three and 04/100 dollars');
 });
 
 test('error bounds tests', function () {
