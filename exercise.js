@@ -4,7 +4,7 @@ function convert(amount) {
 		return validWithMessage[1];
 	}
 	
-	amount = Number(amount); // Allow '1.10' to be passed in, for example
+	amount = Number(amount); // Allow e.g. '1.10' (with quotes) to be passed in
 	var wholeAmount = Math.floor(amount);
 	var digits = getDigits(wholeAmount);
 	var decimal = getDecimalAsString(amount);
@@ -12,8 +12,13 @@ function convert(amount) {
 		tens = '',
 		hundreds = '',
 		thousands = '';
-		dollars = ' dollars'
 	
+	var onesIndex = digits.length - 1,
+		tensIndex = digits.length - 2,
+		hundredsIndex = digits.length - 3,
+		thousandsIndex = digits.length - 4;
+	
+	var dollars = ' dollars';
 	if (amount === 1) {
 		dollars = ' dollar'
 	}
@@ -21,53 +26,57 @@ function convert(amount) {
 	// When referencing digits[], count from the right, not the left,
 	// because digits[] grows from the left.
 	
+	// Ones
 	if (digits.length >= 1) {
 		if (wholeAmount === 0) {
 			ones = 'zero';
 		}
 		
-		if (digits[digits.length - 1] !== 0) {
-			ones = getOnes(digits[digits.length - 1]);
+		if (digits[onesIndex] !== 0) {
+			ones = getOnes(digits[onesIndex]);
 		}
 	}
 	
+	// Tens (messy because of teens and 20, 30, etc.)
 	if (digits.length >= 2) {
-		if (digits[digits.length - 2] === 1) { // Last two digits < 20
-			ones = '';
-			amountOfLastTwoDigits = (digits[digits.length - 2] * 10) + digits[digits.length - 1];
+		if (digits[tensIndex] === 1) { // Last two digits are < 20
+			ones = ''; // 'eleven' instead of 'eleven-one'
+			
+			// Easier to pass 11 to getTeens() than to pass [1, 1]
+			amountOfLastTwoDigits = (digits[tensIndex] * 10) + digits[onesIndex];
+			
 			tens = getTeens(amountOfLastTwoDigits);
-		} else {
-			tens = getTens(digits[digits.length - 2]);
+		} else { // Last two digits are > 20
+			tens = getTens(digits[tensIndex]);
 		
-			if (digits[digits.length - 1] !== 0) { // Not 20, 30, 40...
-				if (digits[digits.length - 2] !== 0) {
+			if (digits[onesIndex] !== 0) { // Not 20, 30, 40...
+				if (digits[tensIndex] !== 0) {
 					tens += '-';
 				} else {
 					tens += ' ';
 				}
-				ones = getOnes(digits[digits.length - 1]);
 			}
 		}
 	}
 	
+	// Hundreds
 	if (digits.length >= 3) {
-		if (digits[digits.length - 3] !== 0) {
-			hundreds += getOnes(digits[digits.length - 3]);
-			hundreds += ' ';
-			hundreds += "hundred";
+		if (digits[hundredsIndex] !== 0) {
+			hundreds += getOnes(digits[hundredsIndex]);
+			hundreds += " hundred";
 			
-			if (digits[digits.length - 2] !== 0) {
+			if (digits[tensIndex] !== 0) {
 				hundreds += ' ';
 			}
 		}
 	}
 	
+	// Thousands
 	if (digits.length >= 4) {
-		thousands += getOnes(digits[digits.length - 4]);
-		thousands += ' ';
-		thousands += "thousand";
+		thousands += getOnes(digits[thousandsIndex]);
+		thousands += " thousand";
 		
-		if (digits[digits.length - 3] !== 0 || digits[digits.length - 2] !== 0) {
+		if (digits[hundredsIndex] !== 0 || digits[tensIndex] !== 0) {
 			thousands += ' ';
 		}
 	}
@@ -89,11 +98,11 @@ function getDigits(integer) {
 
 function getDecimalAsString(amount) {
 	var retval = roundNumber(amount - Math.floor(amount), 2);
-	if (retval !== 0) { // Truthy even if decimal point in different place (e.g. 0.0 vs 0.00)
+	if (retval !== 0) { // Truthy even with differing sig figs (e.g. 0.0 vs 0.00)
 		var decimalAsInt = retval * 100;
 		var decimalAsString = decimalAsInt.toString();
 		if (decimalAsString.length === 1) {
-			decimalAsString = '0' + decimalAsString;
+			decimalAsString = '0' + decimalAsString; // Padded zero
 		}
 		retval = ' and ' + decimalAsString + '/100';
 	} else {
@@ -105,20 +114,16 @@ function getDecimalAsString(amount) {
 // Modified from: http://stackoverflow.com/a/478445
 function roundNumber(number, digits) {
 	var multiple = Math.pow(10, digits);
-	var roundedNum = Math.round(number * multiple) / multiple;
-	return roundedNum;
+	return Math.round(number * multiple) / multiple;
 }
 
 function format(string) {
-	// Capitalize first letter
-	// Modified from: http://stackoverflow.com/a/4878800
+	// Capitalize first letter. Modified from: http://stackoverflow.com/a/4878800
 	return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
 function getOnes(ones) {
 	switch (ones) {
-		case 0:
-			return '';
 		case 1:
 			return 'one';
 		case 2:
@@ -174,7 +179,7 @@ function getTens(tens) {
 		case 0:
 			return '';
 		case 1:
-			break;
+			break; // Handled in getTeens()
 		case 2:
 			return 'twenty';
 		case 3:
