@@ -202,17 +202,15 @@ function isValid(amount) {
 	}
 	
 	if (amount > 9999.99) {
-		return [false, 'Amount too large (valid range: 0-9999.99)'];
+		return [false, 'Amount too large (valid range: 0.01-9999.99 and 0)'];
 	}
 	if (amount < 0.01 && amount !== 0) {
-		return [false, 'Amount too small (valid range: 0-9999.99)'];
+		return [false, 'Amount too small (valid range: 0.01-9999.99 and 0)'];
 	}
 	
-	// Check for at most two decimal places by shifting the number to the left
-	// by two digits and then checking to see whether it's an integer
-	// Integer-checking modified from: http://stackoverflow.com/a/3886106
-	var epsilon = 0.0000001 // Account for errors in JavaScript floating point math
-	if (((amount * 100) % 1) > epsilon) {
+	// Check for at most two decimal places
+	var decimalSplit = amount.toString().split('.');
+	if (decimalSplit.length === 2 && decimalSplit[1].length > 2) {
 		return [false, 'Amount has too many decimal places'];
 	}
 	

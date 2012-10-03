@@ -50,13 +50,14 @@ test('decimal tests', function () {
 	strictEqual(convert(1.), 'One dollar');
 	strictEqual(convert('1.10'), 'One and 10/100 dollars');
 	strictEqual(convert(2523.04), 'Two thousand five hundred twenty-three and 04/100 dollars'); // Listed in problem description
+	strictEqual(convert(1101.1), 'One thousand one hundred one and 10/100 dollars');
 });
 
 test('error-inducing tests', function () {
-	strictEqual(convert(10000), 'Amount too large (valid range: 0-9999.99)');
-	strictEqual(convert(-1), 'Amount too small (valid range: 0-9999.99)');
-	strictEqual(convert(9999.999), 'Amount too large (valid range: 0-9999.99)');
-	strictEqual(convert(0.001), 'Amount too small (valid range: 0-9999.99)');
+	strictEqual(convert(10000), 'Amount too large (valid range: 0.01-9999.99 and 0)');
+	strictEqual(convert(-1), 'Amount too small (valid range: 0.01-9999.99 and 0)');
+	strictEqual(convert(9999.999), 'Amount too large (valid range: 0.01-9999.99 and 0)');
+	strictEqual(convert(0.001), 'Amount too small (valid range: 0.01-9999.99 and 0)');
 	strictEqual(convert('hey'), 'Amount not a number');
 	strictEqual(convert(1.234), 'Amount has too many decimal places');
 	strictEqual(convert(0.101), 'Amount has too many decimal places');
