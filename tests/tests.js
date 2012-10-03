@@ -44,6 +44,12 @@ test('simple tests', function () {
 	strictEqual(convert(9999), 'Nine thousand nine hundred ninety-nine');
 });
 
+test('error bounds tests', function () {
+	strictEqual(convert(10000), 'Amount too large (valid range: 0-9999.99)');
+	strictEqual(convert(-1), 'Amount too small (valid range: 0-9999.99)')
+	// TODO Add decimal tests for 9999.999 and 0.001
+});
+
 test('getDigits tests', function () {
 	deepEqual(getDigits(0), [0]);
 	deepEqual(getDigits(1), [1]);

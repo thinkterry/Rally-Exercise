@@ -5,6 +5,14 @@ function convert(amount) {
 		thousands = '';
 	var digits = getDigits(Math.floor(amount))
 	
+	// Error bound checks
+	if (amount > 9999.99) {
+		return 'Amount too large (valid range: 0-9999.99)';
+	}
+	if (amount < 0) {
+		return 'Amount too small (valid range: 0-9999.99)';
+	}
+	
 	// When referencing digits[], count from the right, not the left,
 	// because digits[] grows from the left.
 	
