@@ -1,33 +1,29 @@
 function convert(amount) {
 	var ones = '',
 		tens = '';
+	var digits = getDigits(Math.floor(amount))
 	
 	if (amount < 20) {
 		ones = getSimpleCase(amount);
-	} else if (amount === 20) {
-		tens = 'twenty';
+		return format(ones);
+	}
+	
+	if (digits[1] === 0) { // 20, 30, 40...
+		tens = getTens(amount);
 	} else if (amount < 30) {
 		tens = 'twenty';
 		tens += '-';
 		ones = getOnes(amount - 20);
-	} else if (amount === 30) {
-		tens = 'thirty';
 	} else if (amount > 30) {
 		tens = 'thirty'
 		tens += '-';
 		ones = getOnes(amount - 30);
 	}
 	
-	var retval = tens + ones;
-	
-	// Capitalize first letter
-	// Modified from: http://stackoverflow.com/a/4878800
-	retval = retval.charAt(0).toUpperCase() + retval.substr(1);
-	
-	return retval;
+	return format(tens + ones);
 }
 
-function digits(integer) {
+function getDigits(integer) {
 	var amountAsString = integer.toString();
 	var amountAsStringArray = amountAsString.split('');
 	
@@ -37,6 +33,12 @@ function digits(integer) {
 	}
 	
 	return amountAsIntArray;
+}
+
+function format(string) {
+	// Capitalize first letter
+	// Modified from: http://stackoverflow.com/a/4878800
+	return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
 // Only call with numbers 0-19
@@ -95,6 +97,29 @@ function getTeens(teens) {
 			return 'eighteen';
 		case 19:
 			return 'nineteen';
+		default:
+			break;
+	}
+}
+
+function getTens(amount) {
+	switch (amount) {
+		case 20:
+			return 'twenty';
+		case 30:
+			return 'thirty';
+		case 40:
+			return 'forty';
+		case 50:
+			return 'fifty';
+		case 60:
+			return 'sixty';
+		case 70:
+			return 'seventy';
+		case 80:
+			return 'eighty';
+		case 90:
+			return 'ninety';
 		default:
 			break;
 	}
