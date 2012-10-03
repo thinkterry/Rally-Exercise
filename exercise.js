@@ -27,6 +27,18 @@ function convert(amount) {
 	return retval;
 }
 
+function digits(amount) {
+	var amountAsString = amount.toString();
+	var amountAsStringArray = amountAsString.split('');
+	
+	var amountAsIntArray = [];
+	for (var i = 0; i < amountAsStringArray.length; i++) {
+		amountAsIntArray[i] = parseInt(amountAsStringArray[i], 10); // Base 10
+	}
+	
+	return amountAsIntArray;
+}
+
 // Only call with numbers 0-19
 function getSimpleCase(amount) {
 	if (amount < 10) {

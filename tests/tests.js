@@ -21,3 +21,9 @@ test('simple tests', function () {
 	strictEqual(convert(30), 'Thirty');
 	strictEqual(convert(31), 'Thirty-one');
 });
+
+test('digits tests', function () {
+	deepEqual(digits(1), [1]);
+	deepEqual(digits(10), [1, 0]);
+	deepEqual(digits(100), [1, 0, 0]);
+});
