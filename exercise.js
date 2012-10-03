@@ -1,13 +1,27 @@
 function convert(amount) {
-	var ones = '',
+	amount = Number(amount); // Make sure we're dealing with numbers
+	var validWithMessage = isValid(amount);
+	if (!validWithMessage[0]) {
+		return validWithMessage[1];
+	}
+	
+	var decimal = '',
+		ones = '',
 		tens = '',
 		hundreds = '',
 		thousands = '';
 	var digits = getDigits(Math.floor(amount));
 	
-	var validWithMessage = isValid(amount);
-	if (!validWithMessage[0]) {
-		return validWithMessage[1];
+	decimal = roundNumber(amount - Math.floor(amount), 2);
+	if (decimal !== 0) { // Truthy even if decimal point in different place (e.g. 0.0 vs 0.00)
+		var decimalAsInt = decimal * 100;
+		var decimalAsString = decimalAsInt.toString();
+		if (decimalAsString.length === 1) {
+			decimalAsString = '0' + decimalAsString;
+		}
+		decimal = ' and ' + decimalAsString + '/100';
+	} else {
+		decimal = '';
 	}
 	
 	// When referencing digits[], count from the right, not the left,
@@ -65,7 +79,7 @@ function convert(amount) {
 		}
 	}
 	
-	return format(thousands + hundreds + tens + ones);
+	return format(thousands + hundreds + tens + ones + decimal);
 }
 
 function getDigits(integer) {
@@ -78,6 +92,13 @@ function getDigits(integer) {
 	}
 	
 	return amountAsIntArray;
+}
+
+// Modified from: http://stackoverflow.com/a/478445
+function roundNumber(number, digits) {
+	var multiple = Math.pow(10, digits);
+	var roundedNum = Math.round(number * multiple) / multiple;
+	return roundedNum;
 }
 
 function format(string) {

@@ -1,15 +1,8 @@
-/*
-// copy/paste
-test(' test', function () {
-	strictEqual(, );
-});
-*/
-
-test('hello test', function () {
+test('sanity test', function () {
 	ok(true === true, 'true is true');
 });
 
-test('simple tests', function () {
+test('integer tests', function () {
 	strictEqual(convert(0), 'Zero');
 	strictEqual(convert(1), 'One');
 	strictEqual(convert(2), 'Two');
@@ -44,13 +37,22 @@ test('simple tests', function () {
 	strictEqual(convert(9999), 'Nine thousand nine hundred ninety-nine');
 });
 
+test('decimal tests', function () {
+	strictEqual(convert(1.11), 'One and 11/100');
+	strictEqual(convert(1.10), 'One and 10/100');
+	strictEqual(convert(1.01), 'One and 01/100');
+	strictEqual(convert(10.02), 'Ten and 02/100');
+});
+
 test('error bounds tests', function () {
 	strictEqual(convert(10000), 'Amount too large (valid range: 0-9999.99)');
 	strictEqual(convert(-1), 'Amount too small (valid range: 0-9999.99)')
 	// TODO Add decimal tests for 9999.999 and 0.001
+	// TODO Add check for NaN (http://stackoverflow.com/a/175787)
+	// TODO Add check for too many decimals (compare number to roundNumber(number))
 });
 
-test('getDigits tests', function () {
+test('digits tests', function () {
 	deepEqual(getDigits(0), [0]);
 	deepEqual(getDigits(1), [1]);
 	deepEqual(getDigits(10), [1, 0]);
@@ -58,4 +60,14 @@ test('getDigits tests', function () {
 	deepEqual(getDigits(111), [1, 1, 1]);
 	deepEqual(getDigits(1000), [1, 0, 0, 0]);
 	//deepEqual(getDigits(1.50), [1, '.', 5, 0]); // Illegal
+});
+
+test('round tests', function () {
+	strictEqual(roundNumber(1.22, 2), 1.22);
+	strictEqual(roundNumber(1.009, 2), 1.01);
+	strictEqual(roundNumber(.00, 2), 0.00);
+	strictEqual(roundNumber(.01, 2), 0.01);
+	strictEqual(roundNumber(.1, 2), 0.10);
+	strictEqual(roundNumber(1, 2), 1.00);
+	
 });
