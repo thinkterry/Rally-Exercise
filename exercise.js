@@ -56,7 +56,9 @@ function format(string) {
 
 // Only call with numbers 1-19
 function getSimpleCase(amount) {
-	if (amount < 10) {
+	if (amount === 0) {
+		return 'zero';
+	} else if (amount < 10) {
 		return getOnes(amount);
 	} else if (amount < 20) {
 		return getTeens(amount);

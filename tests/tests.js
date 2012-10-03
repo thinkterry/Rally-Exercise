@@ -10,6 +10,7 @@ test('hello test', function () {
 });
 
 test('simple tests', function () {
+	strictEqual(convert(0), 'Zero');
 	strictEqual(convert(1), 'One');
 	strictEqual(convert(2), 'Two');
 	strictEqual(convert(9), 'Nine');
