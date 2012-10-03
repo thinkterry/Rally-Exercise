@@ -1,7 +1,7 @@
 /*
 // copy/paste
 test(' test', function () {
-	ok(, '');
+	strictEqual(, );
 });
 */
 
@@ -11,4 +11,6 @@ test('hello test', function () {
 
 test('simple tests', function () {
 	strictEqual(convert(1), 'One');
+	strictEqual(convert(2), 'Two');
+	strictEqual(convert(9), 'Nine');
 });
