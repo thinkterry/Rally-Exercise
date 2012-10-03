@@ -24,6 +24,7 @@ test('simple tests', function () {
 	strictEqual(convert(55), 'Fifty-five');
 	strictEqual(convert(86), 'Eighty-six');
 	strictEqual(convert(99), 'Ninety-nine');
+	strictEqual(convert(100), 'One hundred');
 });
 
 test('getDigits tests', function () {

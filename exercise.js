@@ -1,6 +1,7 @@
 function convert(amount) {
 	var ones = '',
-		tens = '';
+		tens = '',
+		hundreds = '';
 	var digits = getDigits(Math.floor(amount))
 	
 	if (amount < 20) {
@@ -8,14 +9,21 @@ function convert(amount) {
 		return format(ones);
 	}
 	
-	tens = getTens(digits[0]);
+	// When referencing digits[], count from the right, not the left,
+	// because digits[] grows from the left.
 	
-	if (digits[1] !== 0) {
+	tens = getTens(digits[digits.length - 2]);
+	
+	if (digits[digits.length - 1] !== 0) {
 		tens += '-';
-		ones = getOnes(digits[1]);
+		ones = getOnes(digits[digits.length - 1]);
 	}
 	
-	return format(tens + ones);
+	if (digits.length === 3) {
+		hundreds = "One hundred";
+	}
+	
+	return format(hundreds + tens + ones);
 }
 
 function getDigits(integer) {
@@ -36,7 +44,7 @@ function format(string) {
 	return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
-// Only call with numbers 0-19
+// Only call with numbers 1-19
 function getSimpleCase(amount) {
 	if (amount < 10) {
 		return getOnes(amount);
@@ -99,6 +107,10 @@ function getTeens(teens) {
 
 function getTens(tens) {
 	switch (tens) {
+		case 0:
+			return '';
+		case 1:
+			break;
 		case 2:
 			return 'twenty';
 		case 3:
