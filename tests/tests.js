@@ -42,6 +42,7 @@ test('decimal tests', function () {
 	strictEqual(convert(1.10), 'One and 10/100');
 	strictEqual(convert(1.01), 'One and 01/100');
 	strictEqual(convert(10.02), 'Ten and 02/100');
+	//strictEqual(convert(0.02), 'Zero and 02/100');
 });
 
 test('error bounds tests', function () {

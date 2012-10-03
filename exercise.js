@@ -1,28 +1,15 @@
 function convert(amount) {
-	amount = Number(amount); // Make sure we're dealing with numbers
 	var validWithMessage = isValid(amount);
 	if (!validWithMessage[0]) {
 		return validWithMessage[1];
 	}
 	
-	var decimal = '',
-		ones = '',
+	var digits = getDigits(Math.floor(amount));
+	var decimal = getDecimal(amount);
+	var ones = '',
 		tens = '',
 		hundreds = '',
 		thousands = '';
-	var digits = getDigits(Math.floor(amount));
-	
-	decimal = roundNumber(amount - Math.floor(amount), 2);
-	if (decimal !== 0) { // Truthy even if decimal point in different place (e.g. 0.0 vs 0.00)
-		var decimalAsInt = decimal * 100;
-		var decimalAsString = decimalAsInt.toString();
-		if (decimalAsString.length === 1) {
-			decimalAsString = '0' + decimalAsString;
-		}
-		decimal = ' and ' + decimalAsString + '/100';
-	} else {
-		decimal = '';
-	}
 	
 	// When referencing digits[], count from the right, not the left,
 	// because digits[] grows from the left.
@@ -92,6 +79,21 @@ function getDigits(integer) {
 	}
 	
 	return amountAsIntArray;
+}
+
+function getDecimal(amount) {
+	var retval = roundNumber(amount - Math.floor(amount), 2);
+	if (retval !== 0) { // Truthy even if decimal point in different place (e.g. 0.0 vs 0.00)
+		var decimalAsInt = retval * 100;
+		var decimalAsString = decimalAsInt.toString();
+		if (decimalAsString.length === 1) {
+			decimalAsString = '0' + decimalAsString;
+		}
+		retval = ' and ' + decimalAsString + '/100';
+	} else {
+		retval = '';
+	}
+	return retval;
 }
 
 // Modified from: http://stackoverflow.com/a/478445
@@ -189,6 +191,9 @@ function getTens(tens) {
 }
 
 function isValid(amount) {
+	// Make sure we're dealing with numbers
+	//amount = Number(amount);
+	
 	// Error bound checks
 	if (amount > 9999.99) {
 		return [false, 'Amount too large (valid range: 0-9999.99)'];
