@@ -5,6 +5,7 @@ test('sanity test', function () {
 test('integer tests', function () {
 	strictEqual(convert(0), 'Zero dollars');
 	strictEqual(convert(1), 'One dollar');
+	strictEqual(convert('1'), 'One dollar');
 	strictEqual(convert(2), 'Two dollars');
 	strictEqual(convert(9), 'Nine dollars');
 	strictEqual(convert(10), 'Ten dollars');
@@ -47,15 +48,18 @@ test('decimal tests', function () {
 	strictEqual(convert(1.00), 'One dollar');
 	strictEqual(convert(1.0), 'One dollar');
 	strictEqual(convert(1.), 'One dollar');
-	strictEqual(convert(2523.04), 'Two thousand five hundred twenty-three and 04/100 dollars');
+	strictEqual(convert('1.10'), 'One and 10/100 dollars');
+	strictEqual(convert(2523.04), 'Two thousand five hundred twenty-three and 04/100 dollars'); // Listed in problem description
 });
 
-test('error bounds tests', function () {
+test('error-inducing tests', function () {
 	strictEqual(convert(10000), 'Amount too large (valid range: 0-9999.99)');
-	strictEqual(convert(-1), 'Amount too small (valid range: 0-9999.99)')
-	// TODO Add decimal tests for 9999.999 and 0.001
-	// TODO Add check for NaN (http://stackoverflow.com/a/175787)
-	// TODO Add check for too many decimals (compare number to roundNumber(number))
+	strictEqual(convert(-1), 'Amount too small (valid range: 0-9999.99)');
+	strictEqual(convert(9999.999), 'Amount too large (valid range: 0-9999.99)');
+	strictEqual(convert(0.001), 'Amount too small (valid range: 0-9999.99)');
+	strictEqual(convert('hey'), 'Amount not a number');
+	strictEqual(convert(1.234), 'Amount has too many decimal places');
+	strictEqual(convert(0.101), 'Amount has too many decimal places');
 });
 
 test('digits tests', function () {
@@ -68,7 +72,7 @@ test('digits tests', function () {
 	//deepEqual(getDigits(1.50), [1, '.', 5, 0]); // Illegal
 });
 
-test('round tests', function () {
+test('rounding tests', function () {
 	strictEqual(roundNumber(1.22, 2), 1.22);
 	strictEqual(roundNumber(1.009, 2), 1.01);
 	strictEqual(roundNumber(.00, 2), 0.00);

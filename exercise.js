@@ -4,9 +4,10 @@ function convert(amount) {
 		return validWithMessage[1];
 	}
 	
+	amount = Number(amount); // Allow '1.10' to be passed in, for example
 	var wholeAmount = Math.floor(amount);
 	var digits = getDigits(wholeAmount);
-	var decimal = getDecimal(amount);
+	var decimal = getDecimalAsString(amount);
 	var ones = '',
 		tens = '',
 		hundreds = '',
@@ -86,7 +87,7 @@ function getDigits(integer) {
 	return amountAsIntArray;
 }
 
-function getDecimal(amount) {
+function getDecimalAsString(amount) {
 	var retval = roundNumber(amount - Math.floor(amount), 2);
 	if (retval !== 0) { // Truthy even if decimal point in different place (e.g. 0.0 vs 0.00)
 		var decimalAsInt = retval * 100;
@@ -196,15 +197,23 @@ function getTens(tens) {
 }
 
 function isValid(amount) {
-	// Make sure we're dealing with numbers
-	//amount = Number(amount);
+	if (isNaN(amount)) {
+		return [false, 'Amount not a number'];
+	}
 	
-	// Error bound checks
 	if (amount > 9999.99) {
 		return [false, 'Amount too large (valid range: 0-9999.99)'];
 	}
-	if (amount < 0) {
+	if (amount < 0.01 && amount !== 0) {
 		return [false, 'Amount too small (valid range: 0-9999.99)'];
+	}
+	
+	// Check for at most two decimal places by shifting the number to the left
+	// by two digits and then checking to see whether it's an integer
+	// Integer-checking modified from: http://stackoverflow.com/a/3886106
+	var epsilon = 0.0000001 // Account for errors in JavaScript floating point math
+	if (((amount * 100) % 1) > epsilon) {
+		return [false, 'Amount has too many decimal places'];
 	}
 	
 	return [true, 'valid'];
