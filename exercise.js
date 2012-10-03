@@ -1,23 +1,47 @@
 function convert(amount) {
-	switch (amount) {
+	var ones = '',
+		tens = '';
+	
+	if (amount > 19) {
+		tens = 'Twenty';
+	}
+	
+	if (amount <= 10) {
+		ones = getOnes(amount);
+		
+		// Capitalize first letter
+		// Modified from: http://stackoverflow.com/a/4878800
+		ones = ones.charAt(0).toUpperCase() + ones.substr(1);
+	} else if (amount > 20) {
+		tens += '-';
+		ones = getOnes(amount - 20);
+	}
+	
+	return tens + ones;
+}
+
+function getOnes(ones) {
+	switch (ones) {
 		case 1:
-			return 'One';
+			return 'one';
 		case 2:
-			return 'Two';
+			return 'two';
 		case 3:
-			return 'Three';
+			return 'three';
 		case 4:
-			return 'Four';
+			return 'four';
 		case 5:
-			return 'Five';
+			return 'five';
 		case 6:
-			return 'Six';
+			return 'six';
 		case 7:
-			return 'Seven';
+			return 'seven';
 		case 8:
-			return 'Eight';
+			return 'eight';
 		case 9:
-			return 'Nine';
+			return 'nine';
+		case 10:
+			return 'ten';
 		default:
 			break;
 	}
