@@ -5,6 +5,7 @@
 	<title>Exercise 1</title>
 </head>
 <body>
+	<h1>Exercise 1</h1>
 	<p>
 	<input type="text" id="amount" value="2523.04" style="text-align:right;">
 	<button id="convert" >Convert</button>
@@ -12,6 +13,11 @@
 	<p id="answer"></p>
 	
 	<script src="exercise.js"></script>
-	<script src="gui.js"></script>
+	<script>
+	document.getElementById('convert').onclick = function () {
+		var amount = document.getElementById('amount').value
+		document.getElementById('answer').innerHTML = convert(amount);
+	};
+</script>
 </body>
 </html>
