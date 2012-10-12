@@ -1,87 +1,102 @@
+/* ------------
+ * -Exercise 1-
+ * ------------
+ * Write some code that will accept an amount and convert it to the
+ * appropriate string representation.
+ * Example:
+ * Convert 2523.04
+ * to "Two thousand five hundred twenty-three and 04/100 dollars"
+ */
+
 function convert(amount) {
-	var validWithMessage = isValid(amount);
-	if (!validWithMessage[0]) {
-		return validWithMessage[1];
+	var valid = isValid(amount);
+	if (!valid[0]) {
+		return valid[1];
 	}
 	
-	amount = Number(amount); // Allow e.g. '1.10' (with quotes) to be passed in
-	var wholeAmount = Math.floor(amount);
-	var digits = getDigits(wholeAmount);
-	var decimal = getDecimalAsString(amount);
-	var ones = '',
-		tens = '',
-		hundreds = '',
-		thousands = '';
+	// ---- Variable declarations ----------------------------------------------
 	
-	var onesIndex = digits.length - 1,
-		tensIndex = digits.length - 2,
-		hundredsIndex = digits.length - 3,
-		thousandsIndex = digits.length - 4;
+	amount = Number(amount); // Allow e.g. '1.10' (with quotes) to be passed in
+	var wholeAmount = Math.floor(amount); // The 1234 part of 1234.56
+	var formattedDecimal = getFormattedDecimal(amount); // The 56 part of 1234.56, but formatted as ' and 56/100'
 	
 	var dollars = ' dollars';
 	if (amount === 1) {
 		dollars = ' dollar'
 	}
 	
-	// When referencing digits[], count from the right, not the left,
-	// because digits[] grows from the left.
+	// Break the amount into an array of its digits for easier access,
+	// e.g. 1234 into [1, 2, 3, 4]. Access the array with meaningful index names.
+	var digits = getDigits(wholeAmount);
+	var ones = digits.length - 1,
+		tens = digits.length - 2,
+		hundreds = digits.length - 3,
+		thousands = digits.length - 4;
+	
+	// Longform representations of the amount, one for each digit,
+	// e.g. ['one thousand ', 'two hundred ', 'thirty-', 'four'].
+	var longforms = ['', '', '', ''];
+	
+	// ---- Actual computations ------------------------------------------------
 	
 	// Ones
 	if (digits.length >= 1) {
 		if (wholeAmount === 0) {
-			ones = 'zero';
+			longforms[ones] = 'zero';
 		}
 		
-		if (digits[onesIndex] !== 0) {
-			ones = getOnes(digits[onesIndex]);
+		if (digits[ones] !== 0) {
+			longforms[ones] = getOnes(digits[ones]);
 		}
 	}
 	
-	// Tens (messy because of teens and 20, 30, etc.)
+	// Tens
+	// (messy because of teens and dashes between tens and ones, etc.)
 	if (digits.length >= 2) {
-		if (digits[tensIndex] === 1) { // Last two digits are < 20
-			ones = ''; // 'eleven' instead of 'eleven-one'
-			
+		if (digits[tens] === 0 && digits[ones] === 0) { // Last two digits are 00
+			// no-op
+		} else if (digits[tens] === 0) { // Last two digits are <= 9
+			longforms[tens] += ' ';
+		} else if (digits[tens] === 1) { // Last two digits are in the teens
 			// Easier to pass 11 to getTeens() than to pass [1, 1]
-			amountOfLastTwoDigits = (digits[tensIndex] * 10) + digits[onesIndex];
+			amountOfLastTwoDigits = (digits[tens] * 10) + digits[ones];
+			longforms[tens] = getTeens(amountOfLastTwoDigits);
 			
-			tens = getTeens(amountOfLastTwoDigits);
-		} else { // Last two digits are > 20
-			tens = getTens(digits[tensIndex]);
+			longforms[ones] = ''; // 'eleven' instead of 'eleven-one'
+		} else { // Last two digits are >= 20
+			longforms[tens] = getTens(digits[tens]);
 		
-			if (digits[onesIndex] !== 0) { // Not 20, 30, 40...
-				if (digits[tensIndex] !== 0) {
-					tens += '-';
-				} else {
-					tens += ' ';
-				}
+			if (digits[ones] !== 0) {
+				// Add a dash only if the ones digit exists, to avoid e.g. 20
+				// becoming 'twenty-' (with a dangling dash).
+				longforms[tens] += '-';
 			}
 		}
 	}
 	
 	// Hundreds
 	if (digits.length >= 3) {
-		if (digits[hundredsIndex] !== 0) {
-			hundreds += getOnes(digits[hundredsIndex]);
-			hundreds += " hundred";
+		if (digits[hundreds] !== 0) {
+			longforms[hundreds] += getOnes(digits[hundreds]);
+			longforms[hundreds] += " hundred";
 			
-			if (digits[tensIndex] !== 0) {
-				hundreds += ' ';
+			if (digits[tens] !== 0) {
+				longforms[hundreds] += ' ';
 			}
 		}
 	}
 	
 	// Thousands
 	if (digits.length >= 4) {
-		thousands += getOnes(digits[thousandsIndex]);
-		thousands += " thousand";
+		longforms[thousands] += getOnes(digits[thousands]);
+		longforms[thousands] += " thousand";
 		
-		if (digits[hundredsIndex] !== 0 || digits[tensIndex] !== 0) {
-			thousands += ' ';
+		if (digits[hundreds] !== 0 || digits[tens] !== 0) {
+			longforms[thousands] += ' ';
 		}
 	}
 	
-	return format(thousands + hundreds + tens + ones + decimal + dollars);
+	return capitalize(longforms.join('') + formattedDecimal + dollars);
 }
 
 function getDigits(integer) {
@@ -96,7 +111,7 @@ function getDigits(integer) {
 	return amountAsIntArray;
 }
 
-function getDecimalAsString(amount) {
+function getFormattedDecimal(amount) {
 	var retval = roundNumber(amount - Math.floor(amount), 2);
 	if (retval !== 0) { // Truthy even with differing sig figs (e.g. 0.0 vs 0.00)
 		var decimalAsInt = retval * 100;
@@ -115,11 +130,6 @@ function getDecimalAsString(amount) {
 function roundNumber(number, digits) {
 	var multiple = Math.pow(10, digits);
 	return Math.round(number * multiple) / multiple;
-}
-
-function format(string) {
-	// Capitalize first letter. Modified from: http://stackoverflow.com/a/4878800
-	return string.charAt(0).toUpperCase() + string.substr(1);
 }
 
 function getOnes(ones) {
@@ -220,4 +230,9 @@ function isValid(amount) {
 	}
 	
 	return [true, 'valid'];
+}
+
+function capitalize(string) {
+	// Modified from: http://stackoverflow.com/a/4878800
+	return string.charAt(0).toUpperCase() + string.substr(1);
 }
